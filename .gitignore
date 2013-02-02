@@ -1,0 +1,13 @@
+
+# Idea project files
+*.iml
+*.ipr
+*.iws
+atlassian-ide-plugin.xml
+
+#build artifacts
+/build
+/out
+/.gradle
+/target
+/.idea
