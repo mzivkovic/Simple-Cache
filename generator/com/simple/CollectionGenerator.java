@@ -20,14 +20,16 @@ public class CollectionGenerator {
 		private final String type;
 		private final String size;
 		private final String unsafeType;
-		private final String emptyIndicator;
+		private final String emptyValueIndicator;
+		private final String emptyKeyIndicator;
 
 
-		public TypeDescription ( String type, String size, String unsafeType, String emptyIndicator ) {
+		public TypeDescription ( String type, String size, String unsafeType, String emptyValueIndicator, String emptyKeyIndicator ) {
 			this.type = type;
 			this.size = size;
 			this.unsafeType = unsafeType;
-			this.emptyIndicator = emptyIndicator;
+			this.emptyValueIndicator = emptyValueIndicator;
+			this.emptyKeyIndicator = emptyKeyIndicator;
 		}
 
 		public String getType () {
@@ -42,19 +44,23 @@ public class CollectionGenerator {
 			return unsafeType;
 		}
 
-		public String getEmptyIndicator () {
-			return emptyIndicator;
+		public String getEmptyValueIndicator () {
+			return emptyValueIndicator;
+		}
+
+		public String getEmptyKeyIndicator () {
+			return emptyKeyIndicator;
 		}
 	}
 
 	public static final TypeDescription[] SIMPLE_TYPES = {
-			new TypeDescription( "int", "4", "Int", "-1" ),
-			new TypeDescription( "long", "8", "Long", "-1" ),
-			new TypeDescription( "byte", "1", "Byte", "-1" ),
-			new TypeDescription( "short", "2", "Short", "-1" ),
-			new TypeDescription( "float", "4", "Float", "-1" ),
-			new TypeDescription( "double", "8", "Double", "-1" ),
-			new TypeDescription( "char", "2", "Char", "'\\uffff'" )
+			new TypeDescription( "int", "4", "Int", "-1", "Integer.MIN_VALUE" ),
+			new TypeDescription( "long", "8", "Long", "-1", "Long.MIN_VALUE" ),
+			new TypeDescription( "byte", "1", "Byte", "-1", "Byte.MIN_VALUE" ),
+			new TypeDescription( "short", "2", "Short", "-1", "Short.MIN_VALUE" ),
+			new TypeDescription( "float", "4", "Float", "-1", "Float.MIN_VALUE" ),
+			new TypeDescription( "double", "8", "Double", "-1", "Double.MIN_VALUE" ),
+			new TypeDescription( "char", "2", "Char", "'\\uffff'", "'\\uffff'" )
 	};
 
 
@@ -88,10 +94,11 @@ public class CollectionGenerator {
 		content = content.replace( "${VALUE_SIZE}", value.getSize() );
 		content = content.replace( "${VALUE_TYPE}", value.getType() );
 		content = content.replace( "${UNSAFE_ENTRY_TYPE}", value.getUnsafeType() );
-		content = content.replace( "${VALUE_EMPTY_INDICATOR}", value.getEmptyIndicator() );
+		content = content.replace( "${VALUE_EMPTY_INDICATOR}", value.getEmptyValueIndicator() );
 
 		content = content.replace( "${KEY_SIZE}", key.getSize() );
 		content = content.replace( "${KEY_TYPE}", key.getType() );
+		content = content.replace( "${KEY_EMPTY_INDICATOR}", key.getEmptyKeyIndicator() );
 		content = content.replace( "${UNSAFE_KEY_TYPE}", key.getUnsafeType() );
 
 		String name = "Simple" + key.getUnsafeType() + value.getUnsafeType() + "Hash";
@@ -106,7 +113,7 @@ public class CollectionGenerator {
 		try {
 
 			file = new File( sourcePath + "/" + name + ".java" );
-			if ( !file.exists()){
+			if ( !file.exists() ) {
 				file.createNewFile();
 			}
 			out = new PrintWriter( file );
